@@ -1,4 +1,4 @@
-# Dbdoc
+# dbdoc
 
 Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/dbdoc`. To experiment with that code, run `bin/console` for an interactive prompt.
 
@@ -22,7 +22,13 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```
+dbdoc help
+dbdoc schema_query --pg
+dbdoc plan
+dbdoc apply
+dbdoc upload
+```
 
 ## Development
 
@@ -38,3 +44,40 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/[USERN
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+
+## Schema queries
+
+### Postgres / Redshift
+
+```sql
+SELECT
+  t.table_schema,
+  t.table_name,
+  c.column_name,
+  c.data_type,
+  c.ordinal_position
+FROM information_schema.tables t
+LEFT JOIN information_schema.columns c
+  ON t.table_schema = c.table_schema
+    AND t.table_name = c.table_name
+WHERE
+  t.table_schema NOT IN ('information_schema', 'pg_catalog')
+ORDER BY 1, 2, 5
+```
+
+### MySQL
+
+```sql
+SELECT
+  c.table_schema,
+  c.table_name,
+  c.column_name,
+  c.data_type,
+  c.ordinal_position
+FROM information_schema.columns c
+LEFT JOIN information_schema.views v
+  ON v.table_schema = c.table_schema
+    AND v.table_name = c.table_name
+WHERE
+  c.table_schema NOT IN ('sys','information_schema', 'mysql', 'performance_schema')
+```
