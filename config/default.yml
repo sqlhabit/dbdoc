@@ -1,0 +1,21 @@
+ignorelist:
+  # 1. Ignore a single table:
+  # - public.users
+
+  # 2. Ignore all tables with prefix:
+  # - public.users*
+
+  # 3. Ignore a whole schema:
+  # - public.*
+
+  # 3a. Also ignore a whole schema:
+  # - information_schema
+
+  # 4. Ignore all schemas that start with a prefix:
+  # - pg_*
+
+  # 5. Ignore a column:
+  # - public.users#id
+
+  # 6. Ignore all columns that include a substring:
+  # - adjust.users#*_account_*
