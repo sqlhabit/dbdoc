@@ -8,6 +8,8 @@ module Dbdoc
       path ||= Dir.pwd
 
       puts "--> Planning"
+
+      true
     end
   end
 end
