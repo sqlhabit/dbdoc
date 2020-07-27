@@ -22,10 +22,8 @@ module Dbdoc
 
         path = config.delete("path")
 
-        linter = Dbdoc::Linter.new(config: config)
-        heavy_images = linter.lint(path: path)
-
-        heavy_images.empty? ? 0 : 2
+        planner = Dbdoc::Planner.new(config: config)
+        planner.plan
       end
     end
 
