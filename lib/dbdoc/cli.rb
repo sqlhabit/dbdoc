@@ -10,7 +10,12 @@ module Dbdoc
 
         schema_folder = File.join(Dir.pwd, "schema")
         unless Dir.exists?(schema_folder)
-          Dir.mkdir(File.join(Dir.pwd, "schema"))
+          Dir.mkdir(schema_folder)
+        end
+
+        doc_folder = File.join(Dir.pwd, "doc")
+        unless Dir.exists?(doc_folder)
+          Dir.mkdir(doc_folder)
         end
 
         target_file = File.join(Dir.pwd, "config.yml")
