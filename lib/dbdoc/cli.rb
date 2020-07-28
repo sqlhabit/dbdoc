@@ -5,13 +5,32 @@ $LOAD_PATH << File.expand_path(__dir__)
 module Dbdoc
   class CLI
     def run(args = [])
-      if args.first == "install"
+      if args.first == "init"
         require "fileutils"
+
+        Dir.mkdir(File.join(Dir.pwd, "schema"))
 
         target_file = File.join(Dir.pwd, ".dbdoc.yml")
         config_file = File.join(File.expand_path(__dir__), "..", "config", "default.yml")
 
         FileUtils.cp(config_file, target_file)
+
+        target_file = File.join(Dir.pwd, ".gitignore")
+        config_file = File.join(File.expand_path(__dir__), "..", "config", ".gitignore")
+
+        FileUtils.cp(config_file, target_file)
+
+        0
+      if args.first == "query"
+        options = extract_options(args)
+
+        config = Dbdoc::Config.load
+        config.merge!(options)
+
+        db_type = config("db")
+        query_file = File.join(File.expand_path(__dir__), "..", "config", "schema_queries", "#{db_type}.sql")
+
+        puts query_file
 
         0
       else
