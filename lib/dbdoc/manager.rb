@@ -1,5 +1,5 @@
 module Dbdoc
-  class Planner
+  class Manager
     def initialize(config: {})
       @config = Dbdoc::Config.load.merge(config)
     end
@@ -8,6 +8,14 @@ module Dbdoc
       path ||= Dir.pwd
 
       puts "--> Planning"
+
+      true
+    end
+
+    def apply(path: Dir.pwd, verbose: true)
+      path ||= Dir.pwd
+
+      puts "--> Applying changes"
 
       true
     end

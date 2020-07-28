@@ -1,4 +1,4 @@
-require "dbdoc/confluence/api"
+require_relative "../confluence/api"
 
 module Dbdoc
   class Uploader

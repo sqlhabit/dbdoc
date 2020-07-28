@@ -50,8 +50,8 @@ module Dbdoc
 
         path = config.delete("path")
 
-        planner = Dbdoc::Planner.new(config: config)
-        planner.plan
+        manager = Dbdoc::Manager.new(config: config)
+        manager.plan
       end
     end
 
