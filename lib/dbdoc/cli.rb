@@ -8,15 +8,18 @@ module Dbdoc
       if args.first == "init"
         require "fileutils"
 
-        Dir.mkdir(File.join(Dir.pwd, "schema"))
+        schema_folder = File.join(Dir.pwd, "schema")
+        unless Dir.exists?(schema_folder)
+          Dir.mkdir(File.join(Dir.pwd, "schema"))
+        end
 
-        target_file = File.join(Dir.pwd, ".dbdoc.yml")
-        config_file = File.join(File.expand_path(__dir__), "..", "config", "default.yml")
+        target_file = File.join(Dir.pwd, "config.yml")
+        config_file = File.join(File.expand_path(__dir__), "../..", "config", "default.yml")
 
         FileUtils.cp(config_file, target_file)
 
         target_file = File.join(Dir.pwd, ".gitignore")
-        config_file = File.join(File.expand_path(__dir__), "..", "config", ".gitignore")
+        config_file = File.join(File.expand_path(__dir__), "../..", "config", ".gitignore")
 
         FileUtils.cp(config_file, target_file)
 
@@ -27,10 +30,11 @@ module Dbdoc
         config = Dbdoc::Config.load
         config.merge!(options)
 
-        db_type = config("db")
-        query_file = File.join(File.expand_path(__dir__), "..", "config", "schema_queries", "#{db_type}.sql")
+        db_type = config["db"]
+        query_file = File.join(File.expand_path(__dir__), "../..", "config", "schema_queries", "#{db_type}.sql")
+        query = File.read(query_file)
 
-        puts query_file
+        puts query
 
         0
       else

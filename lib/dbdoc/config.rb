@@ -3,7 +3,7 @@ require "dbdoc/constants"
 
 module Dbdoc
   class Config
-    FILE_NAME = ".dbdoc.yml".freeze
+    FILE_NAME = "config.yml".freeze
     DEFAULT_FILE = File.join(DBDOC_HOME, "config", "default.yml")
 
     class << self
