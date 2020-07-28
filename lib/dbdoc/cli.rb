@@ -21,7 +21,7 @@ module Dbdoc
         FileUtils.cp(config_file, target_file)
 
         0
-      if args.first == "query"
+      elsif args.first == "query"
         options = extract_options(args)
 
         config = Dbdoc::Config.load
