@@ -28,6 +28,11 @@ module Dbdoc
 
         FileUtils.cp(config_file, target_file)
 
+        target_file = File.join(Dir.pwd, "confluence.env")
+        config_file = File.join(File.expand_path(__dir__), "../..", "config", "confluence.env")
+
+        FileUtils.cp(config_file, target_file)
+
         0
       elsif args.first == "query"
         options = extract_options(args)
