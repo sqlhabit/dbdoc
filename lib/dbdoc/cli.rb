@@ -77,6 +77,16 @@ module Dbdoc
         uploader.upload
 
         0
+      elsif args.first == "clear_confluence_space"
+        options = extract_options(args)
+
+        config = Dbdoc::Config.load
+        config.merge!(options)
+
+        uploader = Dbdoc::Uploader.new(config: config)
+        uploader.clear_confluence_space
+
+        0
       elsif args.first == "help"
         puts "--> SOME HELP"
 

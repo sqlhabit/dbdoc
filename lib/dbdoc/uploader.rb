@@ -14,6 +14,12 @@ module Dbdoc
       delete_pages_for_dropped_schemas_or_tables
     end
 
+    def clear_confluence_space
+      # TODO paginate and fetch all Confluence pages
+      # TODO ask user to Yn if they want to proceed with deletion
+      # TODO iterate over each page_id, unlog it from page_ids.yml and @confluence_api.delete_page(page_id:)
+    end
+
     private
 
     def delete_pages_for_dropped_schemas_or_tables
