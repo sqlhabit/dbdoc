@@ -12,7 +12,7 @@ module Dbdoc
       puts
       puts
 
-      input_schema = read_input_schema.map { |r| r.join(":") }
+      input_schema = read_input_schema.map { |r| r.first(4) }.map { |r| r.join(":") }
       current_schema = read_documented_schema.map { |r| r.join(":") }
 
       puts "--> New columns:"
@@ -29,7 +29,7 @@ module Dbdoc
       puts
       puts
 
-      input_schema = read_input_schema.map { |r| r.join(":") }
+      input_schema = read_input_schema.map { |r| r.first(4) }.map { |r| r.join(":") }
       current_schema = read_documented_schema.map { |r| r.join(":") }
 
       added_columns = input_schema - current_schema
@@ -68,7 +68,10 @@ module Dbdoc
           table_folder = File.join(schema_folder, table_name)
           next unless File.directory?(table_folder)
 
-          columns = YAML.load(File.read(File.join(table_folder, "columns.yml")))
+          columns_file = File.join(table_folder, "columns.yml")
+          next unless File.exists?(columns_file)
+
+          columns = YAML.load(File.read(columns_file))
 
           if columns.empty?
             puts "--> DELETING #{schema_name}.#{table_name}"
@@ -104,7 +107,7 @@ module Dbdoc
       rows.shift if with_header
 
       rows.map! do |r|
-        r.split(",").map(&:strip).map { |c| c.gsub('"', "") }.first(4)
+        r.split(",").map(&:strip).map { |c| c.gsub('"', "") }.first(5)
       end
 
       config = YAML.load(File.read("config.yml"))
@@ -156,7 +159,10 @@ module Dbdoc
           table_folder = File.join(schema_folder, table_name)
           next unless File.directory?(table_folder)
 
-          columns = YAML.load(File.read(File.join(table_folder, "columns.yml")))
+          columns_file = File.join(table_folder, "columns.yml")
+          next unless File.exists?(columns_file)
+
+          columns = YAML.load(File.read(columns_file))
           columns.each do |column|
             keys.push([
               schema_name,
