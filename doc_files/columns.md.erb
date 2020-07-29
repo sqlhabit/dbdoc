@@ -1,0 +1,4 @@
+||Name||Type||Description||
+<%- columns.each do |column| -%>
+|<%= column[:name] %>|<%= column[:type] %>|<%= column[:description].strip %>|
+<%- end -%>

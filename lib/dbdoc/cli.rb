@@ -21,17 +21,17 @@ module Dbdoc
         target_file = File.join(Dir.pwd, "config.yml")
         config_file = File.join(File.expand_path(__dir__), "../..", "config", "default.yml")
 
-        FileUtils.cp(config_file, target_file)
+        FileUtils.cp(config_file, target_file) unless File.exists?(target_file)
 
         target_file = File.join(Dir.pwd, ".gitignore")
         config_file = File.join(File.expand_path(__dir__), "../..", "config", "gitignore.template")
 
-        FileUtils.cp(config_file, target_file)
+        FileUtils.cp(config_file, target_file) unless File.exists?(target_file)
 
         target_file = File.join(Dir.pwd, "confluence.yml")
         config_file = File.join(File.expand_path(__dir__), "../..", "config", "confluence.yml")
 
-        FileUtils.cp(config_file, target_file)
+        FileUtils.cp(config_file, target_file) unless File.exists?(target_file)
 
         0
       elsif args.first == "query"
@@ -65,6 +65,16 @@ module Dbdoc
 
         manager = Dbdoc::Manager.new(config: config)
         manager.apply
+
+        0
+      elsif args.first == "upload"
+        options = extract_options(args)
+
+        config = Dbdoc::Config.load
+        config.merge!(options)
+
+        uploader = Dbdoc::Uploader.new(config: config)
+        uploader.upload
 
         0
       elsif args.first == "help"

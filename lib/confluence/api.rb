@@ -8,7 +8,7 @@ module Confluence
     include HTTParty
     base_uri "dbdoc.atlassian.net"
 
-    CREDENTIALS_FILE = File.join(Dir.pwd, "config", "confluence.env")
+    CREDENTIALS_FILE = File.join(Dir.pwd, "confluence.yml")
 
     def initialize
       credentials = YAML.load(File.read(CREDENTIALS_FILE))
