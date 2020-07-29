@@ -4,11 +4,11 @@ require "yaml"
 require "dbdoc/constants"
 
 module Confluence
-  CREDENTIALS_FILE = File.join(DBDOC_HOME, "config", "confluence.env")
-
   class Api
     include HTTParty
     base_uri "dbdoc.atlassian.net"
+
+    CREDENTIALS_FILE = File.join(Dir.pwd, "config", "confluence.env")
 
     def initialize
       credentials = YAML.load(File.read(CREDENTIALS_FILE))
@@ -28,7 +28,7 @@ module Confluence
       )
     end
 
-    def existing_pages:)
+    def existing_pages
       response = HTTParty.get(
         "https://dbdoc.atlassian.net/wiki/rest/api/content/?&spaceKey=#{@space}", {
           headers: {

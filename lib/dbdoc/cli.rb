@@ -24,7 +24,7 @@ module Dbdoc
         FileUtils.cp(config_file, target_file)
 
         target_file = File.join(Dir.pwd, ".gitignore")
-        config_file = File.join(File.expand_path(__dir__), "../..", "config", ".gitignore")
+        config_file = File.join(File.expand_path(__dir__), "../..", "config", "gitignore.template")
 
         FileUtils.cp(config_file, target_file)
 
@@ -40,24 +40,40 @@ module Dbdoc
         config = Dbdoc::Config.load
         config.merge!(options)
 
-        db_type = config["db"]
+        db_type = config["db"]["type"]
         query_file = File.join(File.expand_path(__dir__), "../..", "config", "schema_queries", "#{db_type}.sql")
         query = File.read(query_file)
 
         puts query
 
         0
-      else
+      elsif args.first == "plan"
         options = extract_options(args)
 
         config = Dbdoc::Config.load
         config.merge!(options)
 
-        path = config.delete("path")
-
         manager = Dbdoc::Manager.new(config: config)
         manager.plan
+
+        0
+      elsif args.first == "apply"
+        options = extract_options(args)
+
+        config = Dbdoc::Config.load
+        config.merge!(options)
+
+        manager = Dbdoc::Manager.new(config: config)
+        manager.apply
+
+        0
+      elsif args.first == "help"
+        puts "--> SOME HELP"
+
+        0
       end
+
+      0
     end
 
     private

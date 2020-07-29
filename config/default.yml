@@ -1,4 +1,6 @@
-db: pg # Choose one from redshift | pg | mysql
+db:
+  type: pg # Choose one from redshift | pg | mysql
+  name: your_database_name
 ignorelist:
   # 1. Ignore a single table:
   # - public.users
