@@ -1,14 +1,20 @@
 require "httparty"
 require "json"
+require "yaml"
+require "dbdoc/constants"
 
 module Confluence
+  CREDENTIALS_FILE = File.join(DBDOC_HOME, "config", "confluence.env")
+
   class Api
     include HTTParty
     base_uri "dbdoc.atlassian.net"
 
-    def initialize(username:, token:)
-      @username = username
-      @token = token
+    def initialize
+      credentials = YAML.load(File.read(CREDENTIALS_FILE))
+      @username = credentials["username"]
+      @token = credentials["token"]
+      @space = credentials["space"]
     end
 
     def delete_page(page_id:)
@@ -22,9 +28,9 @@ module Confluence
       )
     end
 
-    def existing_pages(space:)
+    def existing_pages:)
       response = HTTParty.get(
-        "https://dbdoc.atlassian.net/wiki/rest/api/content/?&spaceKey=#{space}", {
+        "https://dbdoc.atlassian.net/wiki/rest/api/content/?&spaceKey=#{@space}", {
           headers: {
             "Authorization" => "Basic #{basic_auth}",
             "Content-Type"  => "application/json"
@@ -35,13 +41,13 @@ module Confluence
       JSON.parse(response.body)
     end
 
-    def update_page(space:, page_id:, body:, page_title:, version:)
+    def update_page(page_id:, body:, page_title:, version:)
       payload = {
         id: page_id,
         type: "page",
         title: page_title,
         space: {
-          key: space
+          key: @space
         },
         body: {
           wiki: {
@@ -79,12 +85,12 @@ module Confluence
       end
     end
 
-    def create_page(space:, parent_page_id: nil, body:, page_title:)
+    def create_page(parent_page_id: nil, body:, page_title:)
       payload = {
         type: "page",
         title: page_title,
         space: {
-          key: space
+          key: @space
         },
         body: {
           wiki: {

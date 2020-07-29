@@ -28,8 +28,8 @@ module Dbdoc
 
         FileUtils.cp(config_file, target_file)
 
-        target_file = File.join(Dir.pwd, "confluence.env")
-        config_file = File.join(File.expand_path(__dir__), "../..", "config", "confluence.env")
+        target_file = File.join(Dir.pwd, "confluence.yml")
+        config_file = File.join(File.expand_path(__dir__), "../..", "config", "confluence.yml")
 
         FileUtils.cp(config_file, target_file)
 
