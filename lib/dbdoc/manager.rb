@@ -13,7 +13,7 @@ module Dbdoc
       puts
 
       input_schema = read_input_schema.map { |r| r.first(4) }.map { |r| r.join(":") }
-      current_schema = read_documented_schema.map { |r| r.join(":") }
+      current_schema = read_documented_schema
 
       puts "--> New columns:"
       pp input_schema - current_schema
@@ -21,7 +21,7 @@ module Dbdoc
       puts
 
       puts "--> Columns to drop:"
-      pp input_schema - current_schema
+      pp current_schema - input_schema
     end
 
     def apply(path: Dir.pwd, verbose: true)
@@ -30,7 +30,7 @@ module Dbdoc
       puts
 
       input_schema = read_input_schema.map { |r| r.first(4) }.map { |r| r.join(":") }
-      current_schema = read_documented_schema.map { |r| r.join(":") }
+      current_schema = read_documented_schema
 
       added_columns = input_schema - current_schema
       dropped_columns = current_schema - input_schema
@@ -42,7 +42,7 @@ module Dbdoc
         schema_name, table_name, column_name, column_type = column.split(":")
 
         columns_file = File.join(doc_folder, schema_name, table_name, "columns.yml")
-        next unless File.exists?(columns_name)
+        next unless File.exists?(columns_file)
 
         columns = YAML.load(File.read(columns_file))
         columns.reject! { |c| c[:name] == column_name }
