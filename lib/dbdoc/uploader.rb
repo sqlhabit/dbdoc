@@ -10,6 +10,41 @@ module Dbdoc
     end
 
     def upload
+      create_or_updates_pages
+      delete_pages_for_dropped_schemas_or_tables
+    end
+
+    private
+
+    def delete_pages_for_dropped_schemas_or_tables
+      uploaded_pages = YAML.load(File.read(page_ids_file))
+
+      uploaded_pages.each do |key, params|
+        next if key == "root"
+
+        if key.start_with?("schema:")
+          schema_name = key.gsub("schema:", "")
+
+          unless Dir.exists?(File.join(@doc_folder, schema_name))
+            page_id = uploaded_pages[key][:page_id]
+            puts "--> delete page #{key}: #{page_id}"
+            @confluence_api.delete_page(page_id: page_id)
+            unlog_page_id(key: key)
+          end
+        elsif key.start_with?("table:")
+          schema_name, table_name = key.gsub("table:", "").split(".")
+
+          unless Dir.exists?(File.join(@doc_folder, schema_name, table_name))
+            page_id = uploaded_pages[key][:page_id]
+            puts "--> delete page #{key}: #{page_id}"
+            @confluence_api.delete_page(page_id: page_id)
+            unlog_page_id(key: key)
+          end
+        end
+      end
+    end
+
+    def create_or_updates_pages
       root_page_id = create_root_db_page[:page_id]
 
       log_page_id(key: "root", page_id: root_page_id)
@@ -26,8 +61,6 @@ module Dbdoc
         )
       end
     end
-
-    private
 
     def page_ids_file
       file = File.join(Dir.pwd, "page_ids.yml")
@@ -65,6 +98,16 @@ module Dbdoc
       end
 
       page_ids[key][:version] += 1
+
+      File.open(page_ids_file, "w") do |f|
+        f.puts(page_ids.to_yaml)
+      end
+    end
+
+    def unlog_page_id(key:)
+      page_ids = YAML.load(File.read(page_ids_file))
+
+      page_ids.delete(key)
 
       File.open(page_ids_file, "w") do |f|
         f.puts(page_ids.to_yaml)
