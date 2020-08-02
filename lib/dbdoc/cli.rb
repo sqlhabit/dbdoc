@@ -77,7 +77,24 @@ module Dbdoc
         uploader.upload
 
         0
-      elsif args.first == "clear_confluence_space"
+      elsif args.first == "existing_pages"
+        options = extract_options(args)
+
+        config = Dbdoc::Config.load
+        config.merge!(options)
+
+        uploader = Dbdoc::Uploader.new(config: config)
+        pages = uploader.space_pages
+
+        pages.each do |page|
+          page_title = page["title"]
+          page_id = page["id"]
+
+          puts "#{page_title}: #{page_id}"
+        end
+
+        0
+      elsif args.first == "clear_space"
         options = extract_options(args)
 
         config = Dbdoc::Config.load

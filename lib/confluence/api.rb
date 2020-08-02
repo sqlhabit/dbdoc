@@ -18,7 +18,7 @@ module Confluence
     end
 
     def delete_page(page_id:)
-      HTTParty.delete(
+      response = HTTParty.delete(
         "https://dbdoc.atlassian.net/wiki/rest/api/content/#{page_id}", {
           headers: {
             "Authorization" => "Basic #{basic_auth}",
@@ -26,6 +26,8 @@ module Confluence
           }
         }
       )
+
+      response.code == 200
     end
 
     def existing_pages

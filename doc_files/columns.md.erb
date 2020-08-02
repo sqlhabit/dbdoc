@@ -1,4 +1,4 @@
-||Name||Type||Description||
+||Name||Type||Foreign Key||Description||
 <%- columns.each do |column| -%>
-|<%= column[:name] %>|<%= column[:type] %>|<%= column[:description].strip %>|
+|<%= column[:name] %>|<%= column[:type] %>|<%= column[:foreign_key] || " " %>|<%= column[:description].strip %>|
 <%- end -%>

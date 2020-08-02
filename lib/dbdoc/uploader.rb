@@ -14,10 +14,23 @@ module Dbdoc
       delete_pages_for_dropped_schemas_or_tables
     end
 
+    def space_pages
+      @confluence_api.existing_pages["results"]
+    end
+
     def clear_confluence_space
-      # TODO paginate and fetch all Confluence pages
-      # TODO ask user to Yn if they want to proceed with deletion
-      # TODO iterate over each page_id, unlog it from page_ids.yml and @confluence_api.delete_page(page_id:)
+      uploaded_pages = YAML.load(File.read(page_ids_file))
+
+      space_pages.each do |page|
+        page_key = page["title"]
+        page_id = page["id"]
+
+        puts "--> Deleting #{page_key} #{page_id}"
+
+        if @confluence_api.delete_page(page_id: page_id)
+          unlog_page_id(key: page_key)
+        end
+      end
     end
 
     private
