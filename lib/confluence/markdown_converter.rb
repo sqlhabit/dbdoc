@@ -45,7 +45,7 @@ module Confluence
     end
 
     def convert_h5(markdown)
-      markdown.gsub(/^(\#)([^\#].+)$/, 'h5.\2')
+      markdown.gsub(/^(#####)([^\#].+)$/, 'h5.\2')
     end
 
     def convert_bold(markdown)
@@ -59,23 +59,25 @@ module Confluence
     def convert_code(markdown)
       output_lines = []
 
-      markdown.split("\n").each do |line|
+      markdown.each_line do |line|
         if line =~ /^\~{3}\w+$/
           language = line.gsub("~~~", "").strip
 
-          output_lines.push("{code:language=#{language}}")
+          output_lines.push("{code:language=#{language}}\n")
         elsif line =~ /^\~{3}$/
           output_lines.push("{code}")
         else
           output_lines.push(line)
         end
       end
+
+      output_lines.join
     end
 
     # TODO: add nested list convertion
     # TODO: add numbered list convertion
     def convert_unordered_list(markdown)
-      markdown.gsub(/^*\s(.+)$/, '- \2')
+      markdown.gsub(/^\*\s(.+)$/, '- \1')
     end
   end
 end

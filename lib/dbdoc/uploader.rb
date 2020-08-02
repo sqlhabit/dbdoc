@@ -1,5 +1,5 @@
 require "dbdoc/constants"
-require "dbdoc/markdown_converter"
+require_relative "../confluence/markdown_converter"
 require_relative "../confluence/api"
 
 module Dbdoc
@@ -202,7 +202,7 @@ module Dbdoc
       end
 
       columns_table = columns_table_template.result_with_hash({
-        columns:
+        columns: columns_doc
       })
 
       page_body = <<-MARKDOWN
