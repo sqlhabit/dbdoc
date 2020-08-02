@@ -1,10 +1,8 @@
-h3. Count all users
+### How to count all users
 
 Use this query to count all user records:
 
-(!) This is a warning note.
-
-{code:language=sql}
+~~~sql
 SELECT COUNT(*)
 FROM users
-{code}
+~~~

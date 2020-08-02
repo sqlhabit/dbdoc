@@ -1,4 +1,5 @@
 require "dbdoc/constants"
+require "dbdoc/markdown_converter"
 require_relative "../confluence/api"
 
 module Dbdoc
@@ -175,13 +176,17 @@ module Dbdoc
       end
     end
 
+    def markdown(input)
+      Confluence::MarkdownConverter.new.convert(input)
+    end
+
     def upload_table(schema_name:, table_name:, schema_page_id:)
       table_folder = File.join(@doc_folder, schema_name, table_name)
 
-      table_description = File.read(File.join(table_folder, "description.md"))
+      table_description = markdown(File.read(File.join(table_folder, "description.md")))
 
       examples_folder = File.join(table_folder, "examples")
-      table_examples = Dir[File.join(examples_folder, "*.md")].map { |f| File.read(f) }
+      table_examples = Dir[File.join(examples_folder, "*.md")].map { |f| File.read(f) }.map { |example| markdown(example) }
 
       columns_markdown_template_file = File.join(DBDOC_HOME, "doc_files", "columns.md.erb")
 
@@ -190,8 +195,14 @@ module Dbdoc
         nil,
         "-"
       )
+
+      columns_doc = YAML.load(File.read(File.join(table_folder, "columns.yml")))
+      columns_doc.each do |col|
+        col[:description] = markdown(col[:description])
+      end
+
       columns_table = columns_table_template.result_with_hash({
-        columns: YAML.load(File.read(File.join(table_folder, "columns.yml")))
+        columns:
       })
 
       page_body = <<-MARKDOWN
