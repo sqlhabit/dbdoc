@@ -74,10 +74,14 @@ module Confluence
       output_lines.join
     end
 
-    # TODO: add nested list convertion
-    # TODO: add numbered list convertion
     def convert_unordered_list(markdown)
       markdown.gsub(/^\*\s(.+)$/, '- \1')
     end
+
+    # TODO: add nested list convertion
+    # TODO: add numbered list convertion
+
+    # TODO :add emoji
+    # https://support.atlassian.com/confluence-cloud/docs/use-symbols-emojis-and-special-characters/
   end
 end
