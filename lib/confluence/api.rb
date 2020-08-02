@@ -31,6 +31,7 @@ module Confluence
     end
 
     def existing_pages
+      # TODO: paginate over all pages in the space
       response = HTTParty.get(
         "https://dbdoc.atlassian.net/wiki/rest/api/content/?&spaceKey=#{@space}", {
           headers: {

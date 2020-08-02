@@ -24,6 +24,24 @@ module Dbdoc
       pp current_schema - input_schema
     end
 
+    def todo
+      doc_folder_files = File.join(Dir.pwd, "doc", "**/*")
+
+      Dir[doc_folder_files].each do |file|
+        next if file == "."
+        next if file == ".."
+        next if File.directory?(file)
+
+        File.read(file).split("\n").each_with_index do |line, i|
+          if line.include?("TODO")
+            relative_path = file.gsub(Dir.pwd, "")
+
+            puts "#{relative_path}:#{i + 1}"
+          end
+        end
+      end
+    end
+
     def apply(path: Dir.pwd, verbose: true)
       puts "--> APPLY"
       puts

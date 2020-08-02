@@ -104,6 +104,16 @@ module Dbdoc
         uploader.clear_confluence_space
 
         0
+      elsif args.first == "todo"
+        options = extract_options(args)
+
+        config = Dbdoc::Config.load
+        config.merge!(options)
+
+        manager = Dbdoc::Manager.new(config: config)
+        manager.todo
+
+        0
       elsif args.first == "help"
         puts "--> SOME HELP"
 
