@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "dbdoc/constants"
 require_relative "../confluence/markdown_converter"
 require_relative "../confluence/api"
@@ -234,7 +236,7 @@ module Dbdoc
       page_id = latest_page_id(key: page_key)
 
       if page_id
-        response = @confluence_api.update_page(
+        @confluence_api.update_page(
           page_id: page_id,
           page_title: page_title,
           body: page_body,
