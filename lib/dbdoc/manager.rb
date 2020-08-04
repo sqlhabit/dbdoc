@@ -1,10 +1,38 @@
 require "yaml"
+require "fileutils"
 require "dbdoc/constants"
 
 module Dbdoc
   class Manager
-    def initialize(config: {})
-      @config = Dbdoc::Config.load.merge(config)
+    def initialize
+      @config = Dbdoc::Config.load
+    end
+
+    def install
+      schema_folder = File.join(Dir.pwd, "schema")
+      unless Dir.exists?(schema_folder)
+        Dir.mkdir(schema_folder)
+      end
+
+      doc_folder = File.join(Dir.pwd, "doc")
+      unless Dir.exists?(doc_folder)
+        Dir.mkdir(doc_folder)
+      end
+
+      target_file = File.join(Dir.pwd, "config.yml")
+      config_file = File.join(File.expand_path(__dir__), "../..", "config", "default.yml")
+
+      FileUtils.cp(config_file, target_file) unless File.exists?(target_file)
+
+      target_file = File.join(Dir.pwd, ".gitignore")
+      config_file = File.join(File.expand_path(__dir__), "../..", "config", "gitignore.template")
+
+      FileUtils.cp(config_file, target_file) unless File.exists?(target_file)
+
+      target_file = File.join(Dir.pwd, "confluence.yml")
+      config_file = File.join(File.expand_path(__dir__), "../..", "config", "confluence.yml")
+
+      FileUtils.cp(config_file, target_file) unless File.exists?(target_file)
     end
 
     def plan(verbose: true)
@@ -40,6 +68,13 @@ module Dbdoc
           end
         end
       end
+    end
+
+    def query
+      db_type = @config["db"]["type"]
+      query_file = File.join(File.expand_path(__dir__), "../..", "config", "schema_queries", "#{db_type}.sql")
+
+      File.read(query_file)
     end
 
     def apply(path: Dir.pwd, verbose: true)

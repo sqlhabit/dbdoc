@@ -4,8 +4,8 @@ require_relative "../confluence/api"
 
 module Dbdoc
   class Uploader
-    def initialize(config: {})
-      @config = config
+    def initialize
+      @config = Dbdoc::Config.load
       @confluence_api = Confluence::Api.new
       @doc_folder = File.join(Dir.pwd, "doc")
     end
@@ -17,6 +17,15 @@ module Dbdoc
 
     def space_pages
       @confluence_api.existing_pages["results"]
+    end
+
+    def print_space_pages
+      space_pages.each do |page|
+        page_title = page["title"]
+        page_id = page["id"]
+
+        puts "#{page_title}: #{page_id}"
+      end
     end
 
     def clear_confluence_space

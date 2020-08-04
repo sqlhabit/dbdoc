@@ -4,120 +4,65 @@ $LOAD_PATH << File.expand_path(__dir__)
 
 module Dbdoc
   class CLI
+    COMMANDS = {
+      install: %(
+        Generates all necessary config files and documentation folders.
+
+        Run this command in an empty directory.
+      ),
+      query: %(
+        Prints a query that you need to run in the database you're going to document.
+
+        Export the result of this query to the "schema.csv" file and copy it over to the "schema" folder for processing.
+      ),
+      plan: %(
+        Shows you what columns/tables/schemas are new and going to be added/deleted from the documentation.
+      ),
+      apply: %(
+        Generates boilerplate documentation for newly added columns/tables/schemas. Drops documentation for columns/tables/schemas that were deleted from the database.
+      ),
+      "confluence:upload": %(
+        Uploads current documentation to Confluence: pages for new tables/schemas will be added, pages for dropped tables/schemas will be deleted from your Confluence space.
+      ),
+      "confluece:pages": %(
+        Lists all pages in your dbdoc Confluence space (created manually or via dbdoc).
+      ),
+      "confluence:clear": %(
+        IMPORTANT This command will delete ALL pages from the Confluence space (pages created via dbdoc AND pages that were added manually).
+      ),
+      todo: %(
+        Shows you the documentation that needs to be written.
+      )
+    }
     def run(args = [])
-      if args.first == "init"
-        require "fileutils"
-
-        schema_folder = File.join(Dir.pwd, "schema")
-        unless Dir.exists?(schema_folder)
-          Dir.mkdir(schema_folder)
-        end
-
-        doc_folder = File.join(Dir.pwd, "doc")
-        unless Dir.exists?(doc_folder)
-          Dir.mkdir(doc_folder)
-        end
-
-        target_file = File.join(Dir.pwd, "config.yml")
-        config_file = File.join(File.expand_path(__dir__), "../..", "config", "default.yml")
-
-        FileUtils.cp(config_file, target_file) unless File.exists?(target_file)
-
-        target_file = File.join(Dir.pwd, ".gitignore")
-        config_file = File.join(File.expand_path(__dir__), "../..", "config", "gitignore.template")
-
-        FileUtils.cp(config_file, target_file) unless File.exists?(target_file)
-
-        target_file = File.join(Dir.pwd, "confluence.yml")
-        config_file = File.join(File.expand_path(__dir__), "../..", "config", "confluence.yml")
-
-        FileUtils.cp(config_file, target_file) unless File.exists?(target_file)
-
-        0
+      if args.first == "install"
+        manager.install
       elsif args.first == "query"
-        options = extract_options(args)
-
-        config = Dbdoc::Config.load
-        config.merge!(options)
-
-        db_type = config["db"]["type"]
-        query_file = File.join(File.expand_path(__dir__), "../..", "config", "schema_queries", "#{db_type}.sql")
-        query = File.read(query_file)
-
-        puts query
-
-        0
+        puts manager.query
       elsif args.first == "plan"
-        options = extract_options(args)
-
-        config = Dbdoc::Config.load
-        config.merge!(options)
-
-        manager = Dbdoc::Manager.new(config: config)
         manager.plan
-
-        0
       elsif args.first == "apply"
-        options = extract_options(args)
-
-        config = Dbdoc::Config.load
-        config.merge!(options)
-
-        manager = Dbdoc::Manager.new(config: config)
         manager.apply
-
-        0
-      elsif args.first == "upload"
-        options = extract_options(args)
-
-        config = Dbdoc::Config.load
-        config.merge!(options)
-
-        uploader = Dbdoc::Uploader.new(config: config)
+      elsif args.first == "confluence:upload"
         uploader.upload
-
-        0
-      elsif args.first == "existing_pages"
-        options = extract_options(args)
-
-        config = Dbdoc::Config.load
-        config.merge!(options)
-
-        uploader = Dbdoc::Uploader.new(config: config)
-        pages = uploader.space_pages
-
-        pages.each do |page|
-          page_title = page["title"]
-          page_id = page["id"]
-
-          puts "#{page_title}: #{page_id}"
-        end
-
-        0
-      elsif args.first == "clear_space"
-        options = extract_options(args)
-
-        config = Dbdoc::Config.load
-        config.merge!(options)
-
-        uploader = Dbdoc::Uploader.new(config: config)
+      elsif args.first == "confluence:pages"
+        uploader.print_space_pages
+      elsif args.first == "confluence:clear"
         uploader.clear_confluence_space
-
-        0
       elsif args.first == "todo"
-        options = extract_options(args)
-
-        config = Dbdoc::Config.load
-        config.merge!(options)
-
-        manager = Dbdoc::Manager.new(config: config)
         manager.todo
-
-        0
       elsif args.first == "help"
-        puts "--> SOME HELP"
-
-        0
+        puts unindent <<-TEXT
+          Usage: dbdoc [command]
+        TEXT
+        puts
+        COMMANDS.each do |command, description|
+          puts "dbdoc #{command}"
+          puts
+          puts unindent(description)
+        end
+      elsif args.first == "version"
+        puts Dbdoc::VERSION
       end
 
       0
@@ -125,33 +70,16 @@ module Dbdoc
 
     private
 
-    # This method is needed to unindent
-    # ["here document"](https://en.wikibooks.org/wiki/Ruby_Programming/Here_documents)
-    # help description.
-    #
     def unindent(str)
       str.gsub(/^#{str.scan(/^[ \t]+(?=\S)/).min}/, "")
     end
 
-    def extract_options(args)
-      options = {}
+    def manager
+      @manager ||= Dbdoc::Manager.new
+    end
 
-      OptionParser.new do |opts|
-        opts.banner = unindent(<<-TEXT)
-          dbdoc help
-
-          1. dbdoc query
-
-          This will print you a query you need to run to export your database schema.
-        TEXT
-
-        opts.on("-v", "--version", "Prints current version of dbdoc") do
-          puts Dbdoc::VERSION
-          exit 0
-        end
-      end.parse!(args)
-
-      options
+    def uploader
+      @uploader ||= Dbdoc::Uploader.new
     end
   end
 end
