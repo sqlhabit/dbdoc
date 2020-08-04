@@ -2,7 +2,7 @@ require "kramdown"
 
 module Confluence
   class MarkdownConverter
-    CONVERTERS = %w(
+    CONVERTERS = %w[
       convert_h1
       convert_h2
       convert_h3
@@ -12,7 +12,7 @@ module Confluence
       convert_italic
       convert_code
       convert_unordered_list
-    )
+    ].freeze
 
     def convert(original_markdown)
       return if original_markdown.nil?
@@ -81,7 +81,7 @@ module Confluence
     # TODO: add nested list convertion
     # TODO: add numbered list convertion
 
-    # TODO :add emoji
+    # TODO: add emoji
     # https://support.atlassian.com/confluence-cloud/docs/use-symbols-emojis-and-special-characters/
   end
 end

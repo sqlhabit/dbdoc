@@ -22,7 +22,7 @@ module Confluence
         "https://dbdoc.atlassian.net/wiki/rest/api/content/#{page_id}", {
           headers: {
             "Authorization" => "Basic #{basic_auth}",
-            "Content-Type"  => "application/json"
+            "Content-Type" => "application/json"
           }
         }
       )
@@ -36,7 +36,7 @@ module Confluence
         "https://dbdoc.atlassian.net/wiki/rest/api/content/?&spaceKey=#{@space}", {
           headers: {
             "Authorization" => "Basic #{basic_auth}",
-            "Content-Type"  => "application/json"
+            "Content-Type" => "application/json"
           }
         }
       )
@@ -67,7 +67,7 @@ module Confluence
         "https://dbdoc.atlassian.net/wiki/rest/api/content/#{page_id}", {
           headers: {
             "Authorization" => "Basic #{basic_auth}",
-            "Content-Type"  => "application/json"
+            "Content-Type" => "application/json"
           },
           body: payload.to_json
         }
@@ -105,17 +105,17 @@ module Confluence
 
       if parent_page_id
         payload.merge!({
-          ancestors: [
-            { id: parent_page_id }
-          ]
-        })
+                         ancestors: [
+                           { id: parent_page_id }
+                         ]
+                       })
       end
 
       response = HTTParty.post(
         "https://dbdoc.atlassian.net/wiki/rest/api/content/", {
           headers: {
             "Authorization" => "Basic #{basic_auth}",
-            "Content-Type"  => "application/json"
+            "Content-Type" => "application/json"
           },
           body: payload.to_json
         }

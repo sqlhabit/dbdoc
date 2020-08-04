@@ -33,7 +33,7 @@ module Dbdoc
       todo: %(
         Shows you the documentation that needs to be written.
       )
-    }
+    }.freeze
     def run(args = [])
       if args.first == "install"
         manager.install

@@ -10,29 +10,25 @@ module Dbdoc
 
     def install
       schema_folder = File.join(Dir.pwd, "schema")
-      unless Dir.exists?(schema_folder)
-        Dir.mkdir(schema_folder)
-      end
+      Dir.mkdir(schema_folder) unless Dir.exist?(schema_folder)
 
       doc_folder = File.join(Dir.pwd, "doc")
-      unless Dir.exists?(doc_folder)
-        Dir.mkdir(doc_folder)
-      end
+      Dir.mkdir(doc_folder) unless Dir.exist?(doc_folder)
 
       target_file = File.join(Dir.pwd, "config.yml")
       config_file = File.join(File.expand_path(__dir__), "../..", "config", "default.yml")
 
-      FileUtils.cp(config_file, target_file) unless File.exists?(target_file)
+      FileUtils.cp(config_file, target_file) unless File.exist?(target_file)
 
       target_file = File.join(Dir.pwd, ".gitignore")
       config_file = File.join(File.expand_path(__dir__), "../..", "config", "gitignore.template")
 
-      FileUtils.cp(config_file, target_file) unless File.exists?(target_file)
+      FileUtils.cp(config_file, target_file) unless File.exist?(target_file)
 
       target_file = File.join(Dir.pwd, "confluence.yml")
       config_file = File.join(File.expand_path(__dir__), "../..", "config", "confluence.yml")
 
-      FileUtils.cp(config_file, target_file) unless File.exists?(target_file)
+      FileUtils.cp(config_file, target_file) unless File.exist?(target_file)
     end
 
     def plan(verbose: true)
@@ -61,11 +57,11 @@ module Dbdoc
         next if File.directory?(file)
 
         File.read(file).split("\n").each_with_index do |line, i|
-          if line.include?("TODO")
-            relative_path = file.gsub(Dir.pwd, "")
+          next unless line.include?("TODO")
 
-            puts "#{relative_path}:#{i + 1}"
-          end
+          relative_path = file.gsub(Dir.pwd, "")
+
+          puts "#{relative_path}:#{i + 1}"
         end
       end
     end
@@ -95,7 +91,7 @@ module Dbdoc
         schema_name, table_name, column_name, column_type = column.split(":")
 
         columns_file = File.join(doc_folder, schema_name, table_name, "columns.yml")
-        next unless File.exists?(columns_file)
+        next unless File.exist?(columns_file)
 
         columns = YAML.load(File.read(columns_file))
         columns.reject! { |c| c[:name] == column_name }
@@ -122,7 +118,7 @@ module Dbdoc
           next unless File.directory?(table_folder)
 
           columns_file = File.join(table_folder, "columns.yml")
-          next unless File.exists?(columns_file)
+          next unless File.exist?(columns_file)
 
           columns = YAML.load(File.read(columns_file))
 
@@ -165,27 +161,25 @@ module Dbdoc
 
       config = YAML.load(File.read("config.yml"))
 
-      if @config["ignorelist"]
-        @config["ignorelist"].map { |r| r.split(/[\.\#]/) }.each do |b|
-          schema_pattern, table_pattern, column_pattern = b
+      @config["ignorelist"]&.map { |r| r.split(/[\.\#]/) }&.each do |b|
+        schema_pattern, table_pattern, column_pattern = b
 
-          rows.reject! do |row|
-            schema_name, table_name, column_name, _, _ = row
+        rows.reject! do |row|
+          schema_name, table_name, column_name, = row
 
-            if column_pattern
-              next unless column_name =~ Regexp.new(column_pattern.gsub("*", ".*"))
-            end
-
-            if table_pattern
-              next unless table_name =~ Regexp.new(table_pattern.gsub("*", ".*"))
-            end
-
-            if schema_pattern
-              next unless schema_name =~ Regexp.new(schema_pattern.gsub("*", ".*"))
-            end
-
-            true
+          if column_pattern
+            next unless column_name =~ Regexp.new(column_pattern.gsub("*", ".*"))
           end
+
+          if table_pattern
+            next unless table_name =~ Regexp.new(table_pattern.gsub("*", ".*"))
+          end
+
+          if schema_pattern
+            next unless schema_name =~ Regexp.new(schema_pattern.gsub("*", ".*"))
+          end
+
+          true
         end
       end
 
@@ -213,7 +207,7 @@ module Dbdoc
           next unless File.directory?(table_folder)
 
           columns_file = File.join(table_folder, "columns.yml")
-          next unless File.exists?(columns_file)
+          next unless File.exist?(columns_file)
 
           columns = YAML.load(File.read(columns_file))
           columns.each do |column|
@@ -277,14 +271,14 @@ module Dbdoc
           # 4. create table columns.yml
           columns_yaml = File.join(table_folder, "columns.yml")
 
-          unless File.exists?(columns_yaml)
-            columns_erb_tamplate_file = File.join(DBDOC_HOME, "doc_files", "columns.yml.erb")
-            columns_yaml_template = ERB.new(File.read(columns_erb_tamplate_file), nil, "-")
-            File.open(columns_yaml, "w") do |f|
-              f.puts columns_yaml_template.result_with_hash({
-                columns: columns
-              })
-            end
+          next if File.exist?(columns_yaml)
+
+          columns_erb_tamplate_file = File.join(DBDOC_HOME, "doc_files", "columns.yml.erb")
+          columns_yaml_template = ERB.new(File.read(columns_erb_tamplate_file), nil, "-")
+          File.open(columns_yaml, "w") do |f|
+            f.puts columns_yaml_template.result_with_hash({
+                                                            columns: columns
+                                                          })
           end
         end
       end

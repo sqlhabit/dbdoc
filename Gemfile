@@ -8,7 +8,7 @@ gem "kramdown"
 group :development do
   gem "byebug"
   gem "coveralls", require: false
-  gem "rubocop"
   gem "rake", "~> 12.0"
   gem "rspec", "~> 3.0"
+  gem "rubocop"
 end

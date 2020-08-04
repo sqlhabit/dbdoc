@@ -37,9 +37,7 @@ module Dbdoc
 
         puts "--> Deleting #{page_key} #{page_id}"
 
-        if @confluence_api.delete_page(page_id: page_id)
-          unlog_page_id(key: page_key)
-        end
+        unlog_page_id(key: page_key) if @confluence_api.delete_page(page_id: page_id)
       end
     end
 
@@ -48,13 +46,13 @@ module Dbdoc
     def delete_pages_for_dropped_schemas_or_tables
       uploaded_pages = YAML.load(File.read(page_ids_file))
 
-      uploaded_pages.each do |key, params|
+      uploaded_pages.each do |key, _params|
         next if key == "root"
 
         if key.start_with?("schema:")
           schema_name = key.gsub("schema:", "")
 
-          unless Dir.exists?(File.join(@doc_folder, schema_name))
+          unless Dir.exist?(File.join(@doc_folder, schema_name))
             page_id = uploaded_pages[key][:page_id]
             puts "--> delete page #{key}: #{page_id}"
             @confluence_api.delete_page(page_id: page_id)
@@ -63,7 +61,7 @@ module Dbdoc
         elsif key.start_with?("table:")
           schema_name, table_name = key.gsub("table:", "").split(".")
 
-          unless Dir.exists?(File.join(@doc_folder, schema_name, table_name))
+          unless Dir.exist?(File.join(@doc_folder, schema_name, table_name))
             page_id = uploaded_pages[key][:page_id]
             puts "--> delete page #{key}: #{page_id}"
             @confluence_api.delete_page(page_id: page_id)
@@ -94,7 +92,7 @@ module Dbdoc
     def page_ids_file
       file = File.join(Dir.pwd, "page_ids.yml")
 
-      unless File.exists?(file)
+      unless File.exist?(file)
         File.open(file, "w") do |f|
           f.puts("--- {}")
         end
@@ -146,9 +144,11 @@ module Dbdoc
     def create_root_db_page
       page_id = latest_page_id(key: "root")
 
-      return {
-        page_id: page_id
-      } if page_id
+      if page_id
+        return {
+          page_id: page_id
+        }
+      end
 
       db_name = @config["db"]["name"]
       @confluence_api.create_page(
@@ -211,21 +211,21 @@ module Dbdoc
       end
 
       columns_table = columns_table_template.result_with_hash({
-        columns: columns_doc
-      })
+                                                                columns: columns_doc
+                                                              })
 
-      page_body = <<-MARKDOWN
-h2. Description
-
-#{table_description}
-
-h2. Columns
-
-#{columns_table}
-
-h2. Examples
-
-#{table_examples.join("\n") }
+      page_body = <<~MARKDOWN
+        h2. Description
+        
+        #{table_description}
+        
+        h2. Columns
+        
+        #{columns_table}
+        
+        h2. Examples
+        
+        #{table_examples.join("\n")}
       MARKDOWN
 
       page_title = schema_name == "public" ? table_name : "#{schema_name}.#{table_name}"
