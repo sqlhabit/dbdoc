@@ -11,7 +11,7 @@ module Confluence
     CREDENTIALS_FILE = File.join(Dir.pwd, "confluence.yml")
 
     def initialize
-      credentials = YAML.load(File.read(CREDENTIALS_FILE))
+      credentials = YAML.safe_load(File.read(CREDENTIALS_FILE))
       @username = credentials["username"]
       @token = credentials["token"]
       @space = credentials["space"]
