@@ -8,12 +8,14 @@ module Dbdoc
   # dbdoc gem folder. Later, if needed, this class could be used to merge
   # user-defined config with the default one.
   class Config
-    DEFAULT_FILE = File.join(DBDOC_HOME, "config", "default.yml")
+    def initialize(local_path: Dir.pwd)
+      @local_path = local_path
+    end
 
-    class << self
-      def load
-        YAML.safe_load(File.read(DEFAULT_FILE))
-      end
+    def load
+      config_file = File.join(@local_path, "config.yml")
+
+      YAML.safe_load(File.read(config_file))
     end
   end
 end

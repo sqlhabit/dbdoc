@@ -3,6 +3,7 @@
 require "bundler/setup"
 require "dbdoc"
 require "byebug"
+require "fakefs/spec_helpers"
 
 if ENV["TRAVIS"]
   require "coveralls"

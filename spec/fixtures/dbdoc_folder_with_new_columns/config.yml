@@ -1,0 +1,3 @@
+db:
+  type: pg # Choose one from redshift | pg | mysql
+  name: test_db_1

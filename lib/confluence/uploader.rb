@@ -15,8 +15,8 @@ module Confluence
   # is logged to pages.yml file stored in the user's folder
   # with the documentation.
   class Uploader
-    def initialize
-      @config = Dbdoc::Config.load
+    def initialize(local_path: Dir.pwd)
+      @config = Dbdoc::Config.new(local_path: local_path).load
       @confluence_api = Confluence::Api.new
       @doc_folder = File.join(Dir.pwd, "doc")
     end

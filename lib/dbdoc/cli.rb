@@ -51,7 +51,7 @@ module Dbdoc
     # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     def run(args = [])
       if args.first == "install"
-        manager.install
+        Dbdoc::FolderInitializer.new.init
       elsif args.first == "query"
         puts manager.query
       elsif args.first == "plan"

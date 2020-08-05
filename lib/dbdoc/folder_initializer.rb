@@ -9,8 +9,8 @@ module Dbdoc
   # folder into a dbdoc folder.
   #
   class FolderInitializer
-    def initialize
-      @config = Dbdoc::Config.load
+    def initialize(local_path: Dir.pwd)
+      @config = Dbdoc::Config.new(local_path: local_path).load
     end
 
     def init

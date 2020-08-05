@@ -1,0 +1,9 @@
+"table_schema","table_name","column_name","data_type","ordinal_position"
+"public","users","id","integer",1
+"public","users","name","text",2
+"public","users","email","text",3
+"public","users","created_at","timestamp without time zone",4
+"public","purchases","user_id","bigint",1
+"public","purchases","product_name","text",2
+"public","purchases","amount","integer",3
+"public","purchases","created_at","timestamp without time zone",4
