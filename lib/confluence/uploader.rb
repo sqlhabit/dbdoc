@@ -4,7 +4,16 @@ require "dbdoc/constants"
 require_relative "../confluence/markdown_converter"
 require_relative "../confluence/api"
 
-module Dbdoc
+module Confluence
+  # Confluence::Uploader class knows how to uploaded
+  # documentation to the Confluence Space provided in the config.yml.
+  #
+  # Uploader creates a root page with the database name from config.yml
+  # and creates nested pages for schemas and tables.
+  #
+  # A Confluence ID of each page created by dbdoc
+  # is logged to pages.yml file stored in the user's folder
+  # with the documentation.
   class Uploader
     def initialize
       @config = Dbdoc::Config.load
@@ -31,7 +40,7 @@ module Dbdoc
     end
 
     def clear_confluence_space
-      uploaded_pages = YAML.safe_load(File.read(page_ids_file))
+      YAML.safe_load(File.read(page_ids_file))
 
       space_pages.each do |page|
         page_key = page["title"]

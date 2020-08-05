@@ -47,6 +47,7 @@ module Dbdoc
         Shows you the documentation that needs to be written.
       )
     }.freeze
+
     def run(args = [])
       if args.first == "install"
         manager.install
@@ -65,15 +66,7 @@ module Dbdoc
       elsif args.first == "todo"
         manager.todo
       elsif args.first == "help"
-        puts unindent <<-TEXT
-          Usage: dbdoc [command]
-        TEXT
-        puts
-        COMMANDS.each do |command, description|
-          puts "dbdoc #{command}"
-          puts
-          puts unindent(description)
-        end
+        print_help
       elsif args.first == "version"
         puts Dbdoc::VERSION
       end
@@ -92,7 +85,20 @@ module Dbdoc
     end
 
     def uploader
-      @uploader ||= Dbdoc::Uploader.new
+      @uploader ||= Confluence::Uploader.new
+    end
+
+    def print_help
+      puts unindent <<-TEXT
+        Usage: dbdoc [command]
+      TEXT
+      puts
+
+      COMMANDS.each do |command, description|
+        puts "dbdoc #{command}"
+        puts
+        puts unindent(description)
+      end
     end
   end
 end

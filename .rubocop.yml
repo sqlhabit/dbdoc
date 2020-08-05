@@ -11,3 +11,7 @@ Style/Documentation:
   Exclude:
     - lib/confluence/api.rb
     - lib/dbdoc/cli.rb
+
+Metrics/AbcSize:
+  Exclude:
+    - lib/dbdoc/cli.rb
