@@ -6,7 +6,7 @@ describe Dbdoc::Manager do
   describe "#plan" do
     context "when user imports fresh schema" do
       it "returns true" do
-        FakeFS do
+        FakeFS.with_fresh do
           config = File.expand_path("../fixtures/dbdoc_folder_without_documentation", __dir__)
 
           FakeFS::FileSystem.clone(config)
