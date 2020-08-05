@@ -15,3 +15,6 @@ Style/Documentation:
 Metrics/AbcSize:
   Exclude:
     - lib/dbdoc/cli.rb
+
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent

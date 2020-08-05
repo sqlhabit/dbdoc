@@ -227,8 +227,8 @@ module Confluence
       end
 
       columns_table = columns_table_template.result_with_hash({
-                                                                columns: columns_doc
-                                                              })
+        columns: columns_doc
+      })
 
       page_body = <<~MARKDOWN
         h2. Description

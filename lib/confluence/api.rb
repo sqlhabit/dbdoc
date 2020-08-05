@@ -107,10 +107,10 @@ module Confluence
 
       if parent_page_id
         payload.merge!({
-                         ancestors: [
-                           { id: parent_page_id }
-                         ]
-                       })
+          ancestors: [
+            { id: parent_page_id }
+          ]
+        })
       end
 
       response = HTTParty.post(

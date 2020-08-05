@@ -260,8 +260,8 @@ module Dbdoc
           columns_yaml_template = ERB.new(File.read(columns_erb_tamplate_file), nil, "-")
           File.open(columns_yaml, "w") do |f|
             f.puts columns_yaml_template.result_with_hash({
-                                                            columns: columns
-                                                          })
+              columns: columns
+            })
           end
         end
       end
