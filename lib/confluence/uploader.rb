@@ -54,6 +54,7 @@ module Confluence
 
     private
 
+    # rubocop:disable Metrics/AbcSize
     def delete_pages_for_dropped_schemas_or_tables
       uploaded_pages = YAML.safe_load(File.read(page_ids_file))
 
@@ -81,6 +82,7 @@ module Confluence
         end
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     def create_or_updates_pages
       root_page_id = create_root_db_page[:page_id]
@@ -129,7 +131,7 @@ module Confluence
         version: 0
       }
 
-      if page_ids[key][:version] == 0
+      if page_ids.dig(key, :version).zero?
         puts "--> create page #{key}: #{page_id}"
       else
         puts "--> update page #{key}: #{page_id}"
@@ -200,13 +202,16 @@ module Confluence
       Confluence::MarkdownConverter.new.convert(input)
     end
 
+    # rubocop:disable Metrics/AbcSize
     def upload_table(schema_name:, table_name:, schema_page_id:)
       table_folder = File.join(@doc_folder, schema_name, table_name)
 
       table_description = markdown(File.read(File.join(table_folder, "description.md")))
 
       examples_folder = File.join(table_folder, "examples")
-      table_examples = Dir[File.join(examples_folder, "*.md")].map { |f| File.read(f) }.map { |example| markdown(example) }
+      table_examples = Dir[File.join(examples_folder, "*.md")].map do |f|
+        markdown(File.read(f))
+      end
 
       columns_markdown_template_file = File.join(DBDOC_HOME, "doc_files", "columns.md.erb")
 
@@ -265,5 +270,6 @@ module Confluence
         log_page_id(key: "table:#{schema_name}.#{table_name}", page_id: table_page_id)
       end
     end
+    # rubocop:enable Metrics/AbcSize
   end
 end

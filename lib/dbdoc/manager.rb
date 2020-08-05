@@ -14,7 +14,8 @@ module Dbdoc
       @config = Dbdoc::Config.load
     end
 
-    def plan(verbose: true)
+    # rubocop:disable Metrics/AbcSize
+    def plan
       puts "--> PLAN"
       puts
       puts
@@ -30,6 +31,7 @@ module Dbdoc
       puts "--> Columns to drop:"
       pp current_schema - input_schema
     end
+    # rubocop:enable Metrics/AbcSize
 
     def todo
       doc_folder_files = File.join(Dir.pwd, "doc", "**/*")
@@ -56,7 +58,8 @@ module Dbdoc
       File.read(query_file)
     end
 
-    def apply(path: Dir.pwd, verbose: true)
+    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/AbcSize, Metrics/PerceivedComplexity
+    def apply
       puts "--> APPLY"
       puts
       puts
@@ -71,7 +74,7 @@ module Dbdoc
 
       ## DROP COLUMNS
       dropped_columns.each do |column|
-        schema_name, table_name, column_name, column_type = column.split(":")
+        schema_name, table_name, column_name = column.split(":")
 
         columns_file = File.join(doc_folder, schema_name, table_name, "columns.yml")
         next unless File.exist?(columns_file)
@@ -125,6 +128,7 @@ module Dbdoc
 
       create_new_columns(added_columns)
     end
+    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/AbcSize, Metrics/PerceivedComplexity
 
     private
 
@@ -132,6 +136,7 @@ module Dbdoc
       File.read(File.join(Dir.pwd, "schema", "schema.csv"))
     end
 
+    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/AbcSize, Metrics/PerceivedComplexity
     def read_input_schema
       rows = input_schema.split("\n")
       with_header = rows[0].include?("schema_name")
@@ -141,8 +146,6 @@ module Dbdoc
       rows.map! do |r|
         r.split(",").map(&:strip).map { |c| c.gsub('"', "") }.first(5)
       end
-
-      config = YAML.safe_load(File.read("config.yml"))
 
       @config["ignorelist"]&.map { |r| r.split(/[\.\#]/) }&.each do |b|
         schema_pattern, table_pattern, column_pattern = b
@@ -168,7 +171,9 @@ module Dbdoc
 
       rows
     end
+    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/AbcSize, Metrics/PerceivedComplexity
 
+    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/AbcSize, Metrics/PerceivedComplexity
     def read_documented_schema
       doc_folder = File.join(Dir.pwd, "doc")
 
@@ -206,7 +211,9 @@ module Dbdoc
 
       keys
     end
+    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/AbcSize, Metrics/PerceivedComplexity
 
+    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/AbcSize
     def create_new_columns(added_columns)
       doc_folder = File.join(Dir.pwd, "doc")
 
@@ -266,5 +273,6 @@ module Dbdoc
         end
       end
     end
+    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/AbcSize
   end
 end

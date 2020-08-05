@@ -48,6 +48,7 @@ module Dbdoc
       )
     }.freeze
 
+    # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     def run(args = [])
       if args.first == "install"
         manager.install
@@ -73,6 +74,7 @@ module Dbdoc
 
       0
     end
+    # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
 
     private
 
