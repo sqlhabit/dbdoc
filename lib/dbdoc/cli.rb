@@ -55,7 +55,17 @@ module Dbdoc
       elsif args.first == "query"
         puts manager.query
       elsif args.first == "plan"
-        manager.plan
+        plan = manager.plan
+
+        puts "--> New columns:"
+        plan[:new_columns].each do |column|
+          puts column
+        end
+
+        puts "--> Columns to drop:"
+        plan[:columns_to_drop].each do |column|
+          puts column
+        end
       elsif args.first == "apply"
         manager.apply
       elsif args.first == "confluence:upload"

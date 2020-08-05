@@ -14,24 +14,15 @@ module Dbdoc
       @config = Dbdoc::Config.load
     end
 
-    # rubocop:disable Metrics/AbcSize
     def plan
-      puts "--> PLAN"
-      puts
-      puts
-
-      input_schema = read_input_schema.map { |r| r.first(4) }.map { |r| r.join(":") }
+      input_schema = read_input_schema.map { |r| r.first(4).join(":") }
       current_schema = read_documented_schema
 
-      puts "--> New columns:"
-      pp input_schema - current_schema
-      puts
-      puts
-
-      puts "--> Columns to drop:"
-      pp current_schema - input_schema
+      {
+        new_columns: input_schema - current_schema,
+        columns_to_drop: current_schema - input_schema
+      }
     end
-    # rubocop:enable Metrics/AbcSize
 
     def todo
       doc_folder_files = File.join(Dir.pwd, "doc", "**/*")
