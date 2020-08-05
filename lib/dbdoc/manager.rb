@@ -170,6 +170,7 @@ module Dbdoc
     def read_documented_schema
       doc_folder = File.join(@local_path, "doc")
 
+      return [] unless Dir.exist?(doc_folder)
       return [] if Dir.empty?(doc_folder)
 
       keys = []
