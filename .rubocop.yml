@@ -1,2 +1,13 @@
 Style/StringLiterals:
   EnforcedStyle: double_quotes
+
+Metrics/ClassLength:
+  Max: 200
+
+Metrics/MethodLength:
+  Max: 50
+
+Style/Documentation:
+  Exclude:
+    - lib/confluence/api.rb
+    - lib/dbdoc/cli.rb

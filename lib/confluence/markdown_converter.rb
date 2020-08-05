@@ -3,6 +3,11 @@
 require "kramdown"
 
 module Confluence
+  # By default, all documentation should be written in a normal
+  # Markdown format. Later, when we're generating/uploading final documentation,
+  # we'll use Confluence::MarkdownConverter to convert normal Markdown
+  # into Confluence specific Markdown
+  # https://confluence.atlassian.com/bitbucketserver/markdown-syntax-guide-776639995.html
   class MarkdownConverter
     CONVERTERS = %w[
       convert_h1
