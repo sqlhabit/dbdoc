@@ -18,3 +18,7 @@ Metrics/AbcSize:
 
 Layout/FirstHashElementIndentation:
   EnforcedStyle: consistent
+
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*_spec.rb
