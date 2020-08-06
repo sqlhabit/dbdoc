@@ -65,6 +65,8 @@ module Dbdoc
 
       doc_folder = File.join(@local_path, "doc")
 
+      Dir.mkdir(doc_folder) unless Dir.exist?(doc_folder)
+
       ## DROP COLUMNS
       dropped_columns.each do |column|
         schema_name, table_name, column_name = column.split(":")
