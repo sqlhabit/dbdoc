@@ -1,0 +1,25 @@
+---
+  - :name: user_id
+    :type: bigint
+    :position: 1
+    :foreign_key: TODO
+    :description: |
+      TODO
+  - :name: product_name
+    :type: text
+    :position: 2
+    :foreign_key: TODO
+    :description: |
+      TODO
+  - :name: amount
+    :type: integer
+    :position: 3
+    :foreign_key: TODO
+    :description: |
+      TODO
+  - :name: created_at
+    :type: timestamp without time zone
+    :position: 4
+    :foreign_key: TODO
+    :description: |
+      TODO

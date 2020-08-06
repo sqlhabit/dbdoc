@@ -1,0 +1,25 @@
+---
+  - :name: id
+    :type: integer
+    :position: 1
+    :foreign_key: TODO
+    :description: |
+      TODO
+  - :name: name
+    :type: text
+    :position: 2
+    :foreign_key: TODO
+    :description: |
+      TODO
+  - :name: email
+    :type: text
+    :position: 3
+    :foreign_key: TODO
+    :description: |
+      TODO
+  - :name: created_at
+    :type: timestamp without time zone
+    :position: 4
+    :foreign_key: TODO
+    :description: |
+      TODO

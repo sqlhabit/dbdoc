@@ -191,7 +191,7 @@ module Dbdoc
           columns_file = File.join(table_folder, "columns.yml")
           next unless File.exist?(columns_file)
 
-          columns = YAML.safe_load(File.read(columns_file))
+          columns = YAML.safe_load(File.read(columns_file), [Symbol])
           columns.each do |column|
             keys.push([
               schema_name,

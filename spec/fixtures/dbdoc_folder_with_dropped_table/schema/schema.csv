@@ -1,0 +1,5 @@
+"table_schema","table_name","column_name","data_type","ordinal_position"
+"public","users","id","integer",1
+"public","users","name","text",2
+"public","users","email","text",3
+"public","users","created_at","timestamp without time zone",4
