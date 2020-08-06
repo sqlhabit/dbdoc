@@ -72,7 +72,7 @@ module Dbdoc
         columns_file = File.join(doc_folder, schema_name, table_name, "columns.yml")
         next unless File.exist?(columns_file)
 
-        columns = YAML.safe_load(File.read(columns_file))
+        columns = YAML.load(File.read(columns_file))
         columns.reject! { |c| c[:name] == column_name }
         columns.each { |c| c[:description].strip! }
 
@@ -99,7 +99,7 @@ module Dbdoc
           columns_file = File.join(table_folder, "columns.yml")
           next unless File.exist?(columns_file)
 
-          columns = YAML.safe_load(File.read(columns_file))
+          columns = YAML.load(File.read(columns_file))
 
           if columns.empty?
             puts "--> DELETING #{schema_name}.#{table_name}"
@@ -191,7 +191,7 @@ module Dbdoc
           columns_file = File.join(table_folder, "columns.yml")
           next unless File.exist?(columns_file)
 
-          columns = YAML.safe_load(File.read(columns_file), [Symbol])
+          columns = YAML.load(File.read(columns_file), [Symbol])
           columns.each do |column|
             keys.push([
               schema_name,

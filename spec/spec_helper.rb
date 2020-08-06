@@ -3,7 +3,7 @@
 require "bundler/setup"
 require "dbdoc"
 require "byebug"
-require "fakefs/spec_helpers"
+require_relative "helpers/with_dbdoc_folder"
 
 if ENV["TRAVIS"]
   require "coveralls"
@@ -17,4 +17,6 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  config.include Helpers
 end

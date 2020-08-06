@@ -40,7 +40,7 @@ module Confluence
     end
 
     def clear_confluence_space
-      YAML.safe_load(File.read(page_ids_file))
+      YAML.load(File.read(page_ids_file))
 
       space_pages.each do |page|
         page_key = page["title"]
@@ -56,7 +56,7 @@ module Confluence
 
     # rubocop:disable Metrics/AbcSize
     def delete_pages_for_dropped_schemas_or_tables
-      uploaded_pages = YAML.safe_load(File.read(page_ids_file))
+      uploaded_pages = YAML.load(File.read(page_ids_file))
 
       uploaded_pages.each do |key, _params|
         next if key == "root"
@@ -115,17 +115,17 @@ module Confluence
     end
 
     def latest_page_id(key:)
-      page_ids = YAML.safe_load(File.read(page_ids_file))
+      page_ids = YAML.load(File.read(page_ids_file))
       page_ids.dig(key, :page_id)
     end
 
     def latest_page_version(key:)
-      page_ids = YAML.safe_load(File.read(page_ids_file))
+      page_ids = YAML.load(File.read(page_ids_file))
       page_ids.dig(key, :version)
     end
 
     def log_page_id(key:, page_id:)
-      page_ids = YAML.safe_load(File.read(page_ids_file))
+      page_ids = YAML.load(File.read(page_ids_file))
       page_ids[key] ||= {
         page_id: page_id,
         version: 0
@@ -145,7 +145,7 @@ module Confluence
     end
 
     def unlog_page_id(key:)
-      page_ids = YAML.safe_load(File.read(page_ids_file))
+      page_ids = YAML.load(File.read(page_ids_file))
 
       page_ids.delete(key)
 
@@ -221,7 +221,7 @@ module Confluence
         "-"
       )
 
-      columns_doc = YAML.safe_load(File.read(File.join(table_folder, "columns.yml")))
+      columns_doc = YAML.load(File.read(File.join(table_folder, "columns.yml")))
       columns_doc.each do |col|
         col[:description] = markdown(col[:description])
       end

@@ -22,3 +22,6 @@ Layout/FirstHashElementIndentation:
 Metrics/BlockLength:
   Exclude:
     - spec/**/*_spec.rb
+
+Security/YAMLLoad:
+  Enabled: false
