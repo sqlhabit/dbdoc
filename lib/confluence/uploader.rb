@@ -176,11 +176,9 @@ module Confluence
       schema_page_id = latest_page_id(key: "schema:#{schema_name}")
 
       unless schema_page_id
-        db_name = @config["db"]["name"]
-
         schema_page_id = @confluence_api.create_page(
           parent_page_id: root_page_id,
-          page_title: "#{schema_name}",
+          page_title: schema_name,
           body: "#{schema_name} schema documentation"
         )[:page_id]
 
@@ -246,8 +244,7 @@ module Confluence
         #{table_examples.join("\n")}
       MARKDOWN
 
-      db_name = @config["db"]["name"]
-      page_title = schema_name == "public" ? "#{table_name}" : "#{schema_name}.#{table_name}"
+      page_title = schema_name == "public" ? table_name : "#{schema_name}.#{table_name}"
 
       page_key = "table:#{schema_name}.#{table_name}"
       page_id = latest_page_id(key: page_key)
