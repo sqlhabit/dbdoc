@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    dbdoc (0.2.0)
+    dbdoc (0.3.0)
 
 GEM
   remote: https://rubygems.org/
