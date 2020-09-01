@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    dbdoc (0.3.4)
+    dbdoc (0.3.5)
       httparty (~> 0.18)
       kramdown (~> 2.3)
 
