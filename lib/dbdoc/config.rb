@@ -13,9 +13,13 @@ module Dbdoc
     end
 
     def load
-      config_file = File.join(@local_path, "config.yml")
+      local_config_file = File.join(@local_path, "config.yml")
 
-      YAML.load(File.read(config_file))
+      if File.exist?(local_config_file)
+        YAML.load(File.read(local_config_file))
+      else
+        {}
+      end
     end
   end
 end
