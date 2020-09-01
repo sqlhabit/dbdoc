@@ -4,9 +4,6 @@ source "https://rubygems.org"
 
 gemspec
 
-gem "httparty"
-gem "kramdown"
-
 group :development do
   gem "byebug"
   gem "coveralls", require: false

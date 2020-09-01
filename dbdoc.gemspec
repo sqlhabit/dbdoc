@@ -24,4 +24,7 @@ Gem::Specification.new do |spec|
 
   spec.executables   = ["dbdoc"]
   spec.require_paths = ["lib"]
+
+  spec.add_runtime_dependency "httparty", "~> 0.18"
+  spec.add_runtime_dependency "kramdown", "~> 2.3"
 end

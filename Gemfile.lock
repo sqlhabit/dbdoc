@@ -2,6 +2,8 @@ PATH
   remote: .
   specs:
     dbdoc (0.3.3)
+      httparty (~> 0.18)
+      kramdown (~> 2.3)
 
 GEM
   remote: https://rubygems.org/
@@ -78,8 +80,6 @@ DEPENDENCIES
   byebug
   coveralls
   dbdoc!
-  httparty
-  kramdown
   rake (~> 12.0)
   rspec (~> 3.0)
   rubocop
